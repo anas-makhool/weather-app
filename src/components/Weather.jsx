@@ -37,16 +37,14 @@ export default function Weather() {
       const response = await fetch(weatherAPI);
       if (!response.ok) {
         throw new Error(
-          `Failed to fetch weather data or error in the country name: (${
-            response.url.match(/q=([^&]+)/)[1]
-          } Not Found)`
+          `Failed to fetch weather data or error in the country name: (${cityName.toLowerCase()} Not Found)`
         );
       }
       //
       const data = await response.json();
       const image = document.querySelector(".temImg");
       setTemp({
-        tempDegree: Math.round(data.main.temp - 272.15),
+        tempDegree: Math.round(data.main.temp - 273.15),
         description: data.weather[0].description,
         humidity: data.main.humidity,
         windSpeed: data.wind.speed,
@@ -110,8 +108,11 @@ export default function Weather() {
   const inputRef = useRef(null);
   useEffect(() => {
     function wow(e) {
+      console.log(e.key);
       if (e.key === "Enter") {
         document.querySelector(".search-icon").click();
+      } else if (e.key === "Escape") {
+        setCityName("");
       }
     }
     document.addEventListener("keydown", wow);
@@ -172,7 +173,7 @@ export default function Weather() {
             />
             <h1 className="temp-degree">
               {temp.tempDegree}
-              <span style={{ fontSize: "17px" }}> &nbsp;&#8451;</span>
+              <sup className="celsius-signal">°C</sup>
             </h1>
             <h3 className="description">{temp.description}</h3>
           </div>
