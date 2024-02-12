@@ -5,7 +5,6 @@ function App() {
   return (
     <div className="App">
       <Weather />
-      {/* <h1 style={{background:"blue",width:"100px"}}>wow</h1> */}
     </div>
   );
 }

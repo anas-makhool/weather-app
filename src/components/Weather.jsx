@@ -1,5 +1,5 @@
 import "../App.css";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import SearchIcon from "@mui/icons-material/Search";
 import error from "../error.png";
@@ -17,7 +17,7 @@ export default function Weather() {
     description: "",
     humidity: "",
     windSpeed: "",
-    countryName: "",
+    weatherState: "",
   });
   const [cityName, setCityName] = useState("");
   const APIKey = useRef("e7e1a37606465a6edb07c73c38ec905d");
@@ -34,28 +34,29 @@ export default function Weather() {
       fetch(weatherAPI)
         .then((response) => response.json())
         .then((data) => {
-          console.log(data.weather[0].main);
+          console.log(data);
+          //
           const container = document.querySelector(".container");
           const image = document.querySelector(".temImg");
           const tempDiv = document.querySelector(".temp");
           const windAndHumidityDiv = document.querySelector(".humidity-wind");
           const notFoundDiv = document.querySelector(".not-found");
+          //
           if (data.cod < 301) {
-            //
             notFoundDiv.style.display = "none";
-            notFoundDiv.style.scale = 0;
+            // notFoundDiv.style.scale = 0;
             container.style.height = "500px";
             image.style.width = "200px";
             image.style.height = "200px";
-             tempDiv.style.display = "block";
-             windAndHumidityDiv.style.display = "flex";
+            tempDiv.style.display = "block";
+            windAndHumidityDiv.style.display = "flex";
             //
             setTemp({
               tempDegree: Math.round(data.main.temp - 272.15),
               description: data.weather[0].description,
               humidity: data.main.humidity,
               windSpeed: data.wind.speed,
-              countryName:data.name
+              weatherState: data.name,
             });
             //
             switch (data.weather[0].main) {
@@ -89,15 +90,39 @@ export default function Weather() {
     }
     setCityName("");
   };
+  //
+  // TODO:
+  const containerRef = useRef(null);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        containerRef.current.style.height = "100px";
+        document.querySelector(".not-found").style.scale = 0;
+        document.querySelector(".temp").style.scale = 0;
+        document.querySelector(".temp").style.scale = 0;
+        document.querySelector(".humidity-wind").style.display = "none";
+        
+      }
+    }
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
-      <div className="container">
+      <div className="container" ref={containerRef}>
         <div className="search-box">
           <LocationOnIcon />
           <input
             type="text"
             placeholder="Enter Your Location"
-            value={cityName}
+            value={cityName.toUpperCase()}
             onChange={handleSearchInput}
           />
           <div className="search-icon" onClick={btnSearchClick}>
@@ -111,7 +136,10 @@ export default function Weather() {
         </div>
 
         <div className="temp">
-          <h1 className="country-name">{temp.countryName} City</h1>
+          <h3 className="weather-state">
+            {temp.weatherState.charAt(0).toUpperCase() +
+              temp.weatherState.slice(1)}
+          </h3>
           <img
             className="temImg"
             src=""

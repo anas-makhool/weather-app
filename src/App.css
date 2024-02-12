@@ -118,10 +118,10 @@ body {
 }
 
 .not-found {
+  transition: 0.5s;
   margin: 20px 0;
   display: none;
   scale: 0;
-  transition: 0.5s
 }
 
 .not-found h3 {
