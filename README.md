@@ -57,3 +57,5 @@ This project was created by [anas-makhool](https://github.com/anas-makhool).
 ## License
 
 This project is licensed under the [MIT Liscense](LICENSE)
+
+## You can browse it from - [here](https://search-weather-app-pro.netlify.app/)
